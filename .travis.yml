@@ -15,14 +15,14 @@ install:
 
 script:
   # Check the role/playbook's syntax.
-  - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+  - ansible-playbook -i tests/inventory tests/test.yaml --syntax-check
 
   # Run the role/playbook with ansible-playbook.
-  - ansible-playbook -i tests/inventory tests/test.yml --connection=local
+  - ansible-playbook -i tests/inventory tests/test.yaml --connection=local
 
   # Run the role/playbook a second time to check indempotence
   - >
-    ansible-playbook -i tests/inventory tests/test.yml --connection=local
+    ansible-playbook -i tests/inventory tests/test.yaml --connection=local
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
