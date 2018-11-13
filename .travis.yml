@@ -11,10 +11,11 @@ install:
   - pip install ansible
 
   # Add ansible.cfg to pick up roles path.
-  - "printf '[defaults]\nroles_path = ../' > ansible.cfg"
-
-  # cat ansible.cfg file for debugging, as the above fails with a parse error.  This works locally...
-  - cat ansible.cfg
+  - >
+    cat <<EOF > ansible.cfg
+    [defaults]
+    role_path = ../
+    EOF
 
 script:
   # Check the role/playbook's syntax.
