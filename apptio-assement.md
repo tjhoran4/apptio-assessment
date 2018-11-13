@@ -5,6 +5,9 @@ https://stackoverflow.com/questions/37652464/how-to-run-ansible-without-hosts-fi
 
 Standard Ansible documentation for file fetch, and asynch background process running.
 
+Following for testing ansible in travis:
+https://www.jeffgeerling.com/blog/testing-ansible-roles-travis-ci-github
+
 DESIGN CHOICES:
 
 I decided to use ansible to deploy the tarball in this case.  Ansible provides declaritive language, and as such provides built-in verification and testing frameworks. This also presents easy enhancement in the future to integrate into a CICD pipline or larger scale production deployment orchestration.
