@@ -1,9 +1,5 @@
 RESOURCES:
 
-BATS bash testing framework:
-https://github.com/sstephenson/bats
-https://github.com/tkuchiki/bats-travis-ci
-
 Ansible host list passed at runtime, bypassing inventory file, to make it easier for user to control deployment:
 https://stackoverflow.com/questions/37652464/how-to-run-ansible-without-hosts-file/37652886
 
@@ -25,4 +21,4 @@ MONITORING/REPORTING/ALERTS: In a more production like pipeline/environment, you
 
 CONFIGURATION:  Only configuration needed is a target host, comma separated list of hosts, or an actual ansible inventory.  The web application itself could in a production like environment, either use the built-in ansible templating combined with a variety of facts to create a configuration file on the fly.  Or it could a centralized configuration management system such as etcd, or consul.
 
-TESTING: Ansible has significant built-in testing inherent to the internals. This allows for less unit testing necessity to be written by the end user.  Actual final use case verification such as working web requests, can be specified in the playbook, or farmed out to QA servers to run their suite of automated integration tests.  See https://docs.ansible.com/ansible/latest/reference_appendices/test_strategies.html for Ansibles opinionated view on testing. Here i've used the basic BASH based test framework to test a few iterations of the deployment.  I am testing both fresh install, and running twice to see if there is any issue with indempotence.
+TESTING: Ansible has significant built-in testing inherent to the internals. This allows for less unit testing necessity to be written by the end user.  Actual final use case verification such as working web requests, can be specified in the playbook, or farmed out to QA servers to run their suite of automated integration tests.  See https://docs.ansible.com/ansible/latest/reference_appendices/test_strategies.html for Ansibles opinionated view on testing. Using travis-ci integration, I am testing both fresh install, and running twice to see if there is any issue with indempotence.

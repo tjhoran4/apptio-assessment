@@ -1,0 +1,4 @@
+---
+- hosts: localhost
+  roles:
+    - tj-webapp-deploy
