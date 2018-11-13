@@ -10,12 +10,8 @@ install:
   # Install Ansible.
   - pip install ansible
 
-  # Add ansible.cfg to pick up roles path.
-  - |
-    cat <<EOF > ansible.cfg
-    [defaults]
-    role_path = ../
-    EOF
+  # bad workaround to not being able to write the file properly
+  - cp tests/ansible.cfg .
 
 script:
   # Check the role/playbook's syntax.
