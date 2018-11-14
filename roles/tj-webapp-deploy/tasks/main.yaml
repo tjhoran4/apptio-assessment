@@ -1,0 +1,7 @@
+---
+- name: Download webapp tarball from S3
+  get_url:
+    url: https://s3-us-west-2.amazonaws.com/techops-interview-webapp/webapp.tar.gz
+    dest: /var/tmp/webapp.tar.gz
+    mode: 0440
+    backup: yes
