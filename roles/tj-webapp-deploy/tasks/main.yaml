@@ -1,14 +1,8 @@
 ---
-#- name: Download webapp tarball from S3
-#  get_url:
-#    url: https://s3-us-west-2.amazonaws.com/techops-interview-webapp/webapp.tar.gz
-#    dest: /var/tmp/webapp.tar.gz
-#    mode: 0440
-#    backup: yes
 - name: Creates directory
   file: path=~/webapp state=directory
 
-- name: Unarchive a file that needs to be downloaded (added in 2.0)
+- name: Unarchive a file that needs to be downloaded from S3
   unarchive:
     src: https://s3-us-west-2.amazonaws.com/techops-interview-webapp/webapp.tar.gz
     dest: ~/webapp
@@ -23,5 +17,5 @@
 
 - name: Start webapp
   tags: webserver
-  shell: cd ~/webapp; nohup ./dist/example-webapp-linux 2>&1 &
+  shell: cd ~/webapp; dist/example-webapp-linux </dev/null >/dev/null 2>&1 &
   when: service_webapp_status.rc == 1
