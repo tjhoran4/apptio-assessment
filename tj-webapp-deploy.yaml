@@ -1,9 +1,0 @@
-- name: apply common configuration to all nodes
-  hosts: all
-
-- name: Download webapp tarball from S3
-  get_url:
-    url: https://s3-us-west-2.amazonaws.com/techops-interview-webapp/webapp.tar.gz
-    dest: /etc/foo.conf
-    mode: 0440
-    backup: yes
