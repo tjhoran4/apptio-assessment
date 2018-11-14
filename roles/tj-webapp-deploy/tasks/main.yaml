@@ -1,11 +1,11 @@
 ---
 - name: Creates directory
-  file: path=~/webapp state=directory
+  file: path="{{ webapp_dest_dir }}" state=directory
 
 - name: Unarchive a file that needs to be downloaded from S3
   unarchive:
     src: https://s3-us-west-2.amazonaws.com/techops-interview-webapp/webapp.tar.gz
-    dest: ~/webapp
+    dest: "{{ webapp_dest_dir }}"
     remote_src: yes
 
 - name: Check if webserver is running
@@ -17,5 +17,5 @@
 
 - name: Start webapp
   tags: webserver
-  shell: cd ~/webapp; dist/example-webapp-linux </dev/null >/dev/null 2>&1 &
+  shell: cd {{ webapp_dest_dir }}; dist/example-webapp-linux </dev/null >/dev/null 2>&1 &
   when: service_webapp_status.rc == 1
