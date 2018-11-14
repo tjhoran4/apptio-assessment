@@ -8,14 +8,30 @@
     dest: "{{ webapp_dest_dir }}"
     remote_src: yes
 
-- name: Check if webserver is running
+- name: Check if webserver is running from my specified path
   tags: webserver
-  shell: ps aux | grep "dist/example" | grep -v grep
+  shell: ps aux | grep "{{ webapp_dest_dir | expanduser }}/dist/example" | grep -v grep
   ignore_errors: yes
   changed_when: false
   register: service_webapp_status
 
-- name: Start webapp
+- name: Check if webserver is running from any path
   tags: webserver
-  shell: cd {{ webapp_dest_dir }}; dist/example-webapp-linux </dev/null >/dev/null 2>&1 &
-  when: service_webapp_status.rc == 1
+  shell: ps aux | grep "dist/example" | grep -v grep
+  ignore_errors: yes
+  changed_when: false
+  register: service_any_webapp_status
+
+- name: fail
+  fail:
+    msg: "This webserver is already running on this host in another path. Please clean this up or confer with the process owner"
+  when: 
+    - service_any_webapp_status.rc == 0
+    - service_webapp_status.rc == 1
+
+- name: Start webapp when not running
+  tags: webserver
+  shell: cd {{ webapp_dest_dir }}; {{ webapp_dest_dir }}/dist/example-webapp-linux </dev/null >/dev/null 2>&1 &
+  when: 
+    - service_any_webapp_status.rc == 1
+    - service_webapp_status.rc == 1
