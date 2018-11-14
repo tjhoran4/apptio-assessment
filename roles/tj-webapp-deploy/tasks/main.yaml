@@ -14,5 +14,14 @@
     dest: ~/webapp
     remote_src: yes
 
-- name: start simple http server in background
-  shell: cd ~/webapp; nohup dist/example-webapp-linux </dev/null >/dev/null 2>&1 &
+- name: Check if webserver is running
+  tags: webserver
+  shell: ps aux | grep "dist/example" | grep -v grep
+  ignore_errors: yes
+  changed_when: false
+  register: service_webapp_status
+
+- name: Start webapp
+  tags: webserver
+  shell: cd ~/webapp; nohup ./dist/example-webapp-linux 2>&1 &
+  when: service_webapp_status.rc == 1
