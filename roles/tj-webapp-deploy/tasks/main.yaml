@@ -46,14 +46,15 @@
   unarchive:
     src: "{{ webapp_dest_dir }}/webapp.tar.gz"
     dest: "{{ webapp_dest_dir }}"
-  when: get_url.changed
+  when: 
     - get_url.changed
     - exists == 0
   notify: "restart webapp"
 
-- name: stop process if already running in correct path
+- name: stop process if already running in correct path and new file was downloaded
   shell: pkill -f {{ webapp_dest_dir | expanduser }}/dist/example-webapp-linux
   notify: "restart webapp"
   when: 
     - service_webapp_status.rc == 0
+    - get_url.changed
 
