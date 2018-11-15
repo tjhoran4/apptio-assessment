@@ -1,0 +1,3 @@
+- name: restart webapp
+  shell: cd {{ webapp_dest_dir }}; {{ webapp_dest_dir }}/dist/example-webapp-linux </dev/null >/dev/null 2>&1 &
+  listen: "restart webapp"

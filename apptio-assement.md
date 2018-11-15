@@ -10,7 +10,7 @@ https://www.jeffgeerling.com/blog/testing-ansible-roles-travis-ci-github
 
 DESIGN CHOICES:
 
-I decided to use ansible to deploy the tarball in this case.  Ansible provides declaritive language, and as such provides built-in verification and testing frameworks. This also presents easy enhancement in the future to integrate into a CICD pipline or larger scale production deployment orchestration.
+I decided to use ansible to deploy the tarball in this case.  Ansible provides declaritive language, and as such provides built-in verification and testing frameworks. This also presents easy enhancement in the future to integrate into a CICD pipline or larger scale production deployment orchestration. Also due to the user being a novice developer, I presumed they did not have root on all systems to perform tasks, and only had a resonable set of local tools.
 
 ALTERNATIVES:
 
@@ -18,9 +18,11 @@ ALTERNATIVES:
 
 - Python/Ruby:  Similarly to bash, there was just no need in this case to use any robust scripting capabilities.
 
-DEPLOYMENT: Single yaml file that can be checked out via git, or downloaded via browser.  Only requirement is ansible being installed on the workstation.
+- Docker: Creating a Dockerfile and allowing a user to do a docker run would have worked, however since this was 
 
-MONITORING/REPORTING/ALERTS: In a more production like pipeline/environment, you would want to take playbook output and store in a central log archive for review (splunk/elk/etc..).  For compliance reasons you could use this to report on any change activity.  You could also use this to overlay deploy activity on top of metric/monitoring dashboards to more easily corellate potential fluxuations in monitoring with deployment events.  You could also add slack output support that would send notifications to any stakeholders of these activities.
+DEPLOYMENT: Single role that can be checked out via git, or downloaded via browser.  Only requirement is ansible being installed on the workstation.
+
+MONITORING/REPORTING/ALERTS: In a more production like pipeline/environment, you would want to take playbook output and store in a central log archive for review (splunk/elk/etc..).  For compliance reasons you could use this to report on any change activity.  You could also use this to overlay deploy activity on top of metric/monitoring dashboards to more easily corellate potential fluxuations in monitoring with deployment events.  You could also add slack output support that would send notifications to any stakeholders of these activities. Further on in production it would make more sense to create startup scripts and make this more of a service as well as opposed to installing locally in a users space.
 
 CONFIGURATION:  Only configuration needed is a target host, comma separated list of hosts, or an actual ansible inventory.  The web application itself could in a production like environment, either use the built-in ansible templating combined with a variety of facts to create a configuration file on the fly.  Or it could a centralized configuration management system such as etcd, or consul.
 

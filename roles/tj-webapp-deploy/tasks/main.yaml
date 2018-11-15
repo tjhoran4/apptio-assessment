@@ -1,21 +1,60 @@
 ---
-- name: Creates directory
-  file: path="{{ webapp_dest_dir }}" state=directory
-
-- name: Unarchive a file that needs to be downloaded from S3
-  unarchive:
-    src: https://s3-us-west-2.amazonaws.com/techops-interview-webapp/webapp.tar.gz
-    dest: "{{ webapp_dest_dir }}"
-    remote_src: yes
-
-- name: Check if webserver is running
+- name: Check if webserver is running from my specified path
   tags: webserver
-  shell: ps aux | grep "dist/example" | grep -v grep
+  shell: ps aux | grep "{{ webapp_dest_dir | expanduser }}/dist/example" | grep -v grep
   ignore_errors: yes
   changed_when: false
   register: service_webapp_status
 
-- name: Start webapp
+- name: Check if webserver is running from any path
   tags: webserver
-  shell: cd {{ webapp_dest_dir }}; dist/example-webapp-linux </dev/null >/dev/null 2>&1 &
-  when: service_webapp_status.rc == 1
+  shell: ps aux | grep "dist/example" | grep -v grep
+  ignore_errors: yes
+  changed_when: false
+  register: service_any_webapp_status
+
+- name: Set exists flag
+  set_fact:
+    exists: 1
+  when: 
+    - service_any_webapp_status.rc == 0
+    - service_webapp_status.rc == 1
+
+- debug: 
+    msg: "Services not running, will start even if no other actions are taken"
+  changed_when: true
+  notify: "restart webapp"
+  when:
+    - service_any_webapp_status.rc == 1
+    - service_webapp_status.rc == 1
+
+- debug:
+    msg: "This webserver is already running on this host in another path. Please clean this up or confer with the process owner"
+  when: 
+    exists == 1
+
+- name: Creates directory
+  file: path="{{ webapp_dest_dir }}" state=directory
+
+- name: Download webapp tarball from S3 location
+  get_url:
+    url: https://s3-us-west-2.amazonaws.com/techops-interview-webapp/webapp.tar.gz
+    dest: "{{ webapp_dest_dir }}/webapp.tar.gz"
+  register: get_url
+
+- name: Unarchive a file that was downloaded from S3
+  unarchive:
+    src: "{{ webapp_dest_dir }}/webapp.tar.gz"
+    dest: "{{ webapp_dest_dir }}"
+  when: 
+    - get_url.changed
+    - exists == 0
+  notify: "restart webapp"
+
+- name: stop process if already running in correct path and new file was downloaded
+  shell: pkill -f {{ webapp_dest_dir | expanduser }}/dist/example-webapp-linux
+  notify: "restart webapp"
+  when: 
+    - service_webapp_status.rc == 0
+    - get_url.changed
+
