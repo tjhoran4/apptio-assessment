@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/tjhoran4/apptio-assessment.svg?branch=master)](https://travis-ci.com/tjhoran4/apptio-assessment)
 
-This is a small ansible role created to deploy a static web application by any user to a test system.  The webapp artifcact is created upstream and stored here:
+This is a small ansible role created to deploy a static web application by any user to a test system. This was tested on ubuntu destinations but should work on other linux. The webapp artifact is created upstream and stored here:
 
   - https://s3-us-west-2.amazonaws.com/techops-interview-webapp/webapp.tar.gz
 
